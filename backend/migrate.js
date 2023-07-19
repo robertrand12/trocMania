@@ -18,9 +18,11 @@ const migrate = async () => {
   await connection.query(`create database ${DB_NAME}`);
   await connection.query(`use ${DB_NAME}`);
 
-  const sql = fs.readFileSync("./database.sql", "utf8");
+  const sql = fs.readFileSync("./trocmania_tables.sql", "utf8");
+  const data = fs.readFileSync("./trocmania_data.sql", "utf8");
 
   await connection.query(sql);
+  await connection.query(data);
 
   connection.end();
 };
