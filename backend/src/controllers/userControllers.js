@@ -122,7 +122,7 @@ const destroy = (req, res) => {
 const login = (req, res, next) => {
   const { email } = req.body;
 
-  models.patient
+  models.user
     .findByEmail(email)
     .then(([users]) => {
       if (users[0] != null) {

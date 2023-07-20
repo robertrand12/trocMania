@@ -6,9 +6,10 @@ class pictureManager extends AbstractManager {
   }
 
   insert(picture) {
-    return this.database.query(`insert into ${this.table} (title) values (?)`, [
-      picture.title,
-    ]);
+    return this.database.query(
+      `insert into ${this.table} (source, ad_id) values (?,?)`,
+      [picture.source, picture.ad_id]
+    );
   }
 }
 

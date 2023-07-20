@@ -58,7 +58,7 @@ const add = (req, res) => {
   models.ad
     .insert(ad)
     .then(([result]) => {
-      res.location(`/ads/${result.insertId}`).sendStatus(201);
+      res.status(201).json(result);
     })
     .catch((err) => {
       console.error(err);

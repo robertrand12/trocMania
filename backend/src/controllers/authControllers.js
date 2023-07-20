@@ -44,11 +44,12 @@ const verifyToken = (req, res, next) => {
 };
 
 const refreshToken = (req, res, next) => {
-  models.patient
+  models.user
     .find(req.body.id)
     .then(([rows]) => {
       if (rows[0] == null) {
-        res.sendStatus(401);
+        // res.sendStatus(401);
+        next();
       } else {
         req.body = rows[0];
         next();
