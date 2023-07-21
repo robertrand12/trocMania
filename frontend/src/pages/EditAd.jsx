@@ -1,11 +1,10 @@
 /* eslint-disable consistent-return */
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useUserContext } from "../contexts/UserContext";
 
-const imageTypes = ["image/jpeg", "image/jpg", "image/png"];
-
 export default function CreateAd() {
+  const { id } = useParams();
   const navigate = useNavigate();
   const { userId } = useUserContext();
   const [title, setTitle] = useState("");
@@ -13,20 +12,17 @@ export default function CreateAd() {
   const [description, setDescription] = useState();
   const [state, setState] = useState();
   const [category, setCategory] = useState();
-  const [selectedFiles, setSelectedFiles] = useState([]);
 
-  const handleChangeSource = (e) => {
-    const files = e.target.files[0];
-    setSelectedFiles(files);
-  };
+  const [adInfo, setAdInfo] = useState([]);
 
   const handleSubmit = (e) => {
-    if (!userId) {
-      navigate("/login");
+    if (userId !== adInfo.user_id) {
+      alert("Vous n'êtes pas le propriétaire de l'annonce !!");
+      return navigate("/");
     }
     e.preventDefault();
-    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/ads`, {
-      method: "POST",
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/ads/${id}`, {
+      method: "PUT",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
@@ -40,37 +36,28 @@ export default function CreateAd() {
         user_id: userId,
       }),
     })
-      .then((res) => res.json())
-      .then((responseData) => {
-        if (selectedFiles.length === 0) {
-          return navigate("/mes-annonces");
-        }
-        const contentData = new FormData();
-        contentData.append("source", selectedFiles);
-        contentData.append("ad_id", responseData.insertId);
-        fetch(`${import.meta.env.VITE_BACKEND_URL}/api/pictures`, {
-          method: "POST",
-          credentials: "include",
-          body: contentData,
-        })
-          // .then((res) => res.json())
-          .then(() => {
-            alert("Votre contenu a bien été enregistré.");
-            navigate("/mes-annonces");
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-            alert(
-              "Une erreur s'est produite lors de l'enregistrement du contenu."
-            );
-          });
+      // .then((res) => res.json())
+      .then(() => {
+        return navigate(`/${id}`);
       });
   };
 
   useEffect(() => {
-    if (!userId) {
-      navigate("/login");
-    }
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/ads/${id}`, {
+      credentials: "include",
+    })
+      .then((res) => {
+        return res.json();
+      })
+      .then((data) => {
+        setAdInfo(data);
+        setTitle(data.title);
+        setPrice(data.price);
+        setDescription(data.description);
+        setState(data.state);
+        setCategory(data.category);
+      })
+      .catch((err) => console.error(err));
   }, []);
 
   return (
@@ -151,20 +138,7 @@ export default function CreateAd() {
               />
             </div>
           </div>
-          <div className="form-group flex flex-col items-start">
-            <label htmlFor="source" className="text-base mb-2 ">
-              Ajouter une photo :
-            </label>
-            <input
-              type="file"
-              multiple
-              id="source"
-              name="source"
-              accept={imageTypes.join(",")}
-              onChange={handleChangeSource}
-              className="px-4 py-1 rounded-md w-full"
-            />
-          </div>
+
           <div className="form-group flex flex-col items-center">
             <label htmlFor="price" className="text-base mb-2 ">
               Prix (en Euros):
@@ -183,7 +157,7 @@ export default function CreateAd() {
               type="submit"
               className="font-bold bg-blue-400 text-white mt-8 rounded-md w-60 h-10 mx-4"
             >
-              <p className="px-6 py-2 text-center">Ajouter</p>
+              <p className="px-6 py-2 text-center">Modifier</p>
             </button>
 
             <Link to="/">

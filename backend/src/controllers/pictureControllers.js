@@ -12,6 +12,19 @@ const browse = (req, res) => {
     });
 };
 
+const browseByAdId = (req, res) => {
+  const picture = req.params.adId;
+  models.picture
+    .findAllMyPicturesByAd(picture)
+    .then(([rows]) => {
+      res.send(rows);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+};
+
 const read = (req, res) => {
   models.picture
     .find(req.params.id)
@@ -65,4 +78,5 @@ module.exports = {
   read,
   add,
   destroy,
+  browseByAdId,
 };

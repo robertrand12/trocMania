@@ -138,6 +138,10 @@ const login = (req, res, next) => {
     });
 };
 
+const logout = (req, res) => {
+  res.clearCookie("jwtToken").end();
+};
+
 module.exports = {
   browse,
   read,
@@ -145,4 +149,5 @@ module.exports = {
   add,
   destroy,
   login,
+  logout,
 };

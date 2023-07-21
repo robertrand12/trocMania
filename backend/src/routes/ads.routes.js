@@ -3,6 +3,8 @@ const router = require("express").Router();
 const adControllers = require("../controllers/adControllers");
 
 router.get("/", adControllers.browse);
+router.get("/bycategory/:category", adControllers.browseByCategory);
+router.get("/myads/:id", adControllers.browseByUserId);
 router.get("/:id", adControllers.read);
 router.put("/:id", adControllers.edit);
 router.post("/", adControllers.add);

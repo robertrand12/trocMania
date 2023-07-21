@@ -11,6 +11,12 @@ class pictureManager extends AbstractManager {
       [picture.source, picture.ad_id]
     );
   }
+
+  findAllMyPicturesByAd(picture) {
+    return this.database.query(`select * from  ${this.table} where ad_id = ?`, [
+      picture,
+    ]);
+  }
 }
 
 module.exports = pictureManager;

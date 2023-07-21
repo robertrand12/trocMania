@@ -18,6 +18,20 @@ class adManager extends AbstractManager {
       ad.id,
     ]);
   }
+
+  findAllMyAds(id) {
+    return this.database.query(
+      `select ad.id, ad.title, ad.price, ad.description, ad.date, ad.state, ad.category, ad.user_id, p.source  from ad left join picture as p on p.ad_id=ad.id where user_id = ? order by ad.id`,
+      [id]
+    );
+  }
+
+  findAllByCategory(category) {
+    return this.database.query(
+      `select ad.id, ad.title, ad.price, ad.description, ad.date, ad.state, ad.category, ad.user_id, p.source  from ad left join picture as p on p.ad_id=ad.id where ad.category = ? order by ad.id`,
+      [category]
+    );
+  }
 }
 
 module.exports = adManager;

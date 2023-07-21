@@ -57,7 +57,7 @@ function Connexion() {
         <h2 className=" font-bold text-black text-2xl h-16 flex justify-center">
           Bonjour
         </h2>
-        <h2 className=" text-black text-xl h-0 flex justify-center">
+        <h2 className=" text-black text-lg h-0 flex justify-center p-5">
           Connectez-vous pour découvrir toutes nos fonctionnalités
         </h2>
       </div>

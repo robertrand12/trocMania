@@ -6,6 +6,7 @@ const authControllers = require("../controllers/authControllers");
 
 router.get("/", userControllers.browse);
 router.get("/:id", userControllers.read);
+router.get("/:id/logout", userControllers.logout);
 router.put("/:id", passwordControllers.hashPassword, userControllers.edit);
 router.post("/", passwordControllers.hashPassword, userControllers.add);
 router.post(

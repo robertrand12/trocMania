@@ -4,7 +4,9 @@ const pictureControllers = require("../controllers/pictureControllers");
 const uploadContentsControllers = require("../controllers/uploadContentsControllers");
 
 router.get("/", pictureControllers.browse);
-router.get("/:id", pictureControllers.read);
+router.get("/:adId", pictureControllers.browseByAdId);
+// router.get("/:id", pictureControllers.read);
+
 router.post(
   "/",
   uploadContentsControllers.uploadContent,

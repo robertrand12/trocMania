@@ -1,10 +1,161 @@
+/* eslint-disable camelcase */
 const models = require("../models");
 
 const browse = (req, res) => {
   models.ad
-    .findAll()
+    .findAllAds()
     .then(([rows]) => {
-      res.send(rows);
+      if (rows.length === 0) {
+        res.json([]);
+      } else {
+        const ads = [];
+
+        for (let i = 0; i < rows.length; i += 1) {
+          const {
+            id,
+            title,
+            price,
+            description,
+            date,
+            state,
+            category,
+            user_id,
+            source,
+          } = rows[i];
+          if (i !== 0 && ads[ads.length - 1].id === id) {
+            ads[ads.length - 1].count += 1;
+            ads[ads.length - 1].pictures.push({
+              source,
+            });
+          } else {
+            ads.push({
+              id,
+              title,
+              price,
+              description,
+              date,
+              state,
+              category,
+              user_id,
+              pictures: [
+                {
+                  source,
+                },
+              ],
+            });
+          }
+        }
+        res.send(ads);
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+};
+
+const browseByCategory = (req, res) => {
+  const categori = req.params.category;
+  models.ad
+    .findAllByCategory(categori)
+    .then(([rows]) => {
+      if (rows.length === 0) {
+        res.json([]);
+      } else {
+        const ads = [];
+
+        for (let i = 0; i < rows.length; i += 1) {
+          const {
+            id,
+            title,
+            price,
+            description,
+            date,
+            state,
+            category,
+            user_id,
+            source,
+          } = rows[i];
+          if (i !== 0 && ads[ads.length - 1].id === id) {
+            ads[ads.length - 1].count += 1;
+            ads[ads.length - 1].pictures.push({
+              source,
+            });
+          } else {
+            ads.push({
+              id,
+              title,
+              price,
+              description,
+              date,
+              state,
+              category,
+              user_id,
+              pictures: [
+                {
+                  source,
+                },
+              ],
+            });
+          }
+        }
+        res.send(ads);
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+};
+
+const browseByUserId = (req, res) => {
+  const ad = parseInt(req.params.id, 10);
+  models.ad
+    .findAllMyAds(ad)
+    .then(([rows]) => {
+      if (rows.length === 0) {
+        res.json([]);
+      } else {
+        const ads = [];
+
+        for (let i = 0; i < rows.length; i += 1) {
+          const {
+            id,
+            title,
+            price,
+            description,
+            date,
+            state,
+            category,
+            user_id,
+            source,
+          } = rows[i];
+          if (i !== 0 && ads[ads.length - 1].id === id) {
+            ads[ads.length - 1].count += 1;
+            ads[ads.length - 1].pictures.push({
+              source,
+            });
+          } else {
+            ads.push({
+              id,
+              title,
+              price,
+              description,
+              date,
+              state,
+              category,
+              user_id,
+              pictures: [
+                {
+                  source,
+                },
+              ],
+            });
+          }
+        }
+
+        res.send(ads);
+      }
     })
     .catch((err) => {
       console.error(err);
@@ -14,12 +165,50 @@ const browse = (req, res) => {
 
 const read = (req, res) => {
   models.ad
-    .find(req.params.id)
+    .findAds(req.params.id)
     .then(([rows]) => {
-      if (rows[0] == null) {
-        res.sendStatus(404);
+      if (rows.length === 0) {
+        res.json([]);
       } else {
-        res.send(rows[0]);
+        const ads = [];
+
+        for (let i = 0; i < rows.length; i += 1) {
+          const {
+            id,
+            title,
+            price,
+            description,
+            date,
+            state,
+            category,
+            user_id,
+            source,
+          } = rows[i];
+          if (i !== 0 && ads[ads.length - 1].id === id) {
+            ads[ads.length - 1].count += 1;
+            ads[ads.length - 1].pictures.push({
+              source,
+            });
+          } else {
+            ads.push({
+              id,
+              title,
+              price,
+              description,
+              date,
+              state,
+              category,
+              user_id,
+              pictures: [
+                {
+                  source,
+                },
+              ],
+            });
+          }
+        }
+
+        res.send(ads[0]);
       }
     })
     .catch((err) => {
@@ -88,4 +277,6 @@ module.exports = {
   edit,
   add,
   destroy,
+  browseByUserId,
+  browseByCategory,
 };

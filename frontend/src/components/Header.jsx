@@ -1,9 +1,8 @@
-import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useUserContext } from "../contexts/UserContext";
 
-export default function Header({ query, setQuery }) {
+export default function Header() {
   const [userInfo, setUserInfo] = useState();
   const { userId } = useUserContext();
 
@@ -20,7 +19,7 @@ export default function Header({ query, setQuery }) {
   }, [userId]);
 
   return (
-    <section>
+    <section className="mb-8">
       <ul className="flex justify-between mx-5 mt-3 items-center">
         <li>
           <Link to="/">
@@ -76,20 +75,7 @@ export default function Header({ query, setQuery }) {
                 <p className="text-center">Mes favoris</p>
               </Link>
             </li>
-            <li className="mx-2">
-              <Link to="/mes-messages">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="36"
-                  viewBox="0 -960 960 960"
-                  width="36"
-                  className="mx-auto"
-                >
-                  <path d="M240-400h480v-60H240v60Zm0-130h480v-60H240v60Zm0-130h480v-60H240v60ZM880-80 720-240H140q-24 0-42-18t-18-42v-520q0-24 18-42t42-18h680q24 0 42 18t18 42v740ZM140-300v-520 520Zm606 0 74 80v-600H140v520h606Z" />
-                </svg>
-                <p className="text-center">Mes messages</p>
-              </Link>
-            </li>
+
             {!userId ? (
               <li className="mx-2">
                 <Link to="/login">
@@ -107,7 +93,7 @@ export default function Header({ query, setQuery }) {
               </li>
             ) : (
               <li className="mx-2">
-                <Link to="/mon-compte">
+                <Link to={`/mon-compte/${userId}`}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     height="36"
@@ -124,18 +110,6 @@ export default function Header({ query, setQuery }) {
           </ul>
         </li>
       </ul>
-      <input
-        className="w-6/12 block mx-auto py-3 rounded-xl px-2 shadow-md my-5 shadow-gray-600 text-black text-sm bg-gray-100"
-        type="text"
-        placeholder="Rechercher sur Troc-Mania "
-        onChange={(e) => setQuery(e.target.value)}
-        value={query}
-      />
     </section>
   );
 }
-
-Header.propTypes = {
-  query: PropTypes.string.isRequired,
-  setQuery: PropTypes.func.isRequired,
-};
