@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useUserContext } from "../contexts/UserContext";
 import Card from "../components/Card";
+import HeaderMobile from "../components/HeaderMobile";
 
 export default function AdsList() {
   const navigate = useNavigate();
@@ -35,16 +36,19 @@ export default function AdsList() {
     );
   }
   return (
-    <section className=" justify-center items-center shadow-md shadow-gray-600 bg-gray-100 w-9/12 p-3 mx-auto rounded-lg my-8">
-      <ul className="flex flex-wrap gap-4 justify-center">
-        {myAds.map((ad) => (
-          <Link to={`/${ad.id}`} className="w-48">
-            <li key={`adlist - ${ad.id}`}>
-              <Card infos={ad} />
-            </li>
-          </Link>
-        ))}
-      </ul>
-    </section>
+    <div>
+      <HeaderMobile />
+      <section className=" justify-center items-center shadow-md shadow-gray-600 bg-gray-100 w-9/12 p-3 mx-auto rounded-lg my-8">
+        <ul className="flex flex-wrap gap-4 justify-center">
+          {myAds.map((ad) => (
+            <Link to={`/${ad.id}`} className="w-48">
+              <li key={`adlist - ${ad.id}`}>
+                <Card infos={ad} />
+              </li>
+            </Link>
+          ))}
+        </ul>
+      </section>
+    </div>
   );
 }

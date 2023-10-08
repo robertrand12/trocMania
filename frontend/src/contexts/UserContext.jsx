@@ -50,6 +50,8 @@ const UserContextProvider = ({ children }) => {
 
 const useUserContext = () => useContext(UserContext);
 
-UserContextProvider.propTypes = { children: PropTypes.elementType.isRequired };
+UserContextProvider.propTypes = {
+  children: PropTypes.elementType.isRequired,
+};
 
 export { UserContextProvider, useUserContext };

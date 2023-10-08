@@ -3,7 +3,7 @@ import defaultImage from "../assets/defaultImage.jpg";
 
 export default function Card({ infos }) {
   return (
-    <figure className="flex flex-col justify-between bg-gray-200 px-2 rounded-md shadow-md shadow-gray-600 h-72">
+    <figure className="flex flex-col justify-between bg-gray-200 px-2 rounded-md shadow-md shadow-gray-600 h-72 hover:bg-gray-300 duration-300">
       <h2>{infos.title}</h2>
       {infos.pictures[0].source ? (
         <img

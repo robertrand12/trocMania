@@ -19,7 +19,7 @@ export default function Header() {
   }, [userId]);
 
   return (
-    <section className="mb-8">
+    <section className="hidden md:block mb-8">
       <ul className="flex justify-between mx-5 mt-3 items-center">
         <li>
           <Link to="/">
@@ -30,7 +30,7 @@ export default function Header() {
           <Link to="/deposer-une-annonce">
             <button
               type="button"
-              className="flex items-center bg-orange-600 hover:bg-orange-500 duration-300 px-4 rounded-xl py-2"
+              className="flex items-center bg-orange-600 hover:bg-orange-500 duration-300 px-4 rounded-xl py-2 hover:scale-105"
             >
               <svg
                 className="fill-white"

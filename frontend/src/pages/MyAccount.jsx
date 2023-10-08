@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useUserContext } from "../contexts/UserContext";
+import HeaderMobile from "../components/HeaderMobile";
 
 export default function MyAccount() {
   const navigate = useNavigate();
@@ -34,7 +35,9 @@ export default function MyAccount() {
       .catch((err) => {
         console.error(err);
         // eslint-disable-next-line no-alert
-        alert("Erreur dans la création du compte, veuillez Essayer à nouveau");
+        alert(
+          "Erreur dans la suppression du compte, veuillez Essayer à nouveau"
+        );
       });
   };
 
@@ -60,59 +63,67 @@ export default function MyAccount() {
   }, [userId]);
 
   if (!userInfo) {
-    return <p>en cours de chargement</p>;
+    return (
+      <div>
+        <HeaderMobile />
+        <p>en cours de chargement</p>
+      </div>
+    );
   }
 
   return (
-    <section className=" justify-center items-center shadow-md shadow-gray-600 bg-gray-100 w-9/12 p-3 mx-auto rounded-lg my-8">
-      <figure className="flex flex-col">
-        <h1 className="text-center mb-5 text-2xl">
-          {userInfo.firstname} {userInfo.lastname}
-        </h1>
-        <div className="flex gap-5 justify-between mb-5 mx-auto">
-          <div>
-            <p>{userInfo.nickname}</p>
-            <p>{userInfo.email}</p>
-            <div className=" font-bold">
-              <p>{userInfo.address}</p>
-              <p>
-                {userInfo.zip_code} {userInfo.city}
-              </p>
+    <div>
+      <HeaderMobile />
+      <section className=" justify-center items-center shadow-md shadow-gray-600 bg-gray-100 w-9/12 p-3 mx-auto rounded-lg my-8">
+        <figure className="flex flex-col">
+          <h1 className="text-center mb-5 text-2xl">
+            {userInfo.firstname} {userInfo.lastname}
+          </h1>
+          <div className="flex gap-5 justify-between mb-5 mx-auto">
+            <div>
+              <p>{userInfo.nickname}</p>
+              <p>{userInfo.email}</p>
+              <div className=" font-bold">
+                <p>{userInfo.address}</p>
+                <p>
+                  {userInfo.zip_code} {userInfo.city}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-      </figure>
-      <div className="flex justify-center gap-4">
-        <Link to={`/mon-compte/${userId}/edit`}>
+        </figure>
+        <div className="flex justify-center gap-4">
+          <Link to={`/mon-compte/${userId}/edit`}>
+            <div className="flex justify-center">
+              <button
+                type="submit"
+                className="font-bold bg-blue-400 text-white mt-8 rounded-md w-60 h-10 hover:bg-blue-500 hover:scale-105 duration-300"
+              >
+                <p className="px-6 py-2 text-center">Modifier mon Compte</p>
+              </button>
+            </div>
+          </Link>
+
           <div className="flex justify-center">
             <button
               type="submit"
-              className="font-bold bg-blue-400 text-white mt-8 rounded-md w-60 h-10"
+              className="font-bold bg-red-400 text-white mt-8 rounded-md w-60 h-10 hover:bg-red-500 hover:scale-105 duration-300"
+              onClick={deleteAccount}
             >
-              <p className="px-6 py-2 text-center">Modifier mon Compte</p>
+              <p className="px-6 py-2 text-center">Supprimer mon Compte</p>
             </button>
           </div>
-        </Link>
-
-        <div className="flex justify-center">
-          <button
-            type="submit"
-            className="font-bold bg-red-400 text-white mt-8 rounded-md w-60 h-10"
-            onClick={deleteAccount}
-          >
-            <p className="px-6 py-2 text-center">Supprimer mon Compte</p>
-          </button>
+          <div className="flex justify-center">
+            <button
+              type="submit"
+              className="font-bold bg-green-400 text-white mt-8 rounded-md w-60 h-10 hover:bg-green-500 hover:scale-105 duration-300"
+              onClick={logout}
+            >
+              <p className="px-6 py-2 text-center">Me déconnecter</p>
+            </button>
+          </div>
         </div>
-        <div className="flex justify-center">
-          <button
-            type="submit"
-            className="font-bold bg-green-400 text-white mt-8 rounded-md w-60 h-10"
-            onClick={logout}
-          >
-            <p className="px-6 py-2 text-center">Me déconnecter</p>
-          </button>
-        </div>
-      </div>
-    </section>
+      </section>
+    </div>
   );
 }

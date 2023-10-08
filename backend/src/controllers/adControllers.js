@@ -220,8 +220,6 @@ const read = (req, res) => {
 const edit = (req, res) => {
   const ad = req.body;
 
-  // TODO validations (length, format...)
-
   ad.id = parseInt(req.params.id, 10);
 
   models.ad
@@ -241,8 +239,6 @@ const edit = (req, res) => {
 
 const add = (req, res) => {
   const ad = req.body;
-
-  // TODO validations (length, format...)
 
   models.ad
     .insert(ad)

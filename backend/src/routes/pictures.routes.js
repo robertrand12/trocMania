@@ -5,8 +5,6 @@ const uploadContentsControllers = require("../controllers/uploadContentsControll
 
 router.get("/", pictureControllers.browse);
 router.get("/:adId", pictureControllers.browseByAdId);
-// router.get("/:id", pictureControllers.read);
-
 router.post(
   "/",
   uploadContentsControllers.uploadContent,
