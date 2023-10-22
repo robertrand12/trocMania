@@ -54,6 +54,7 @@ export default function FavoritesAds() {
     <div>
       <HeaderMobile />
       <section className="w-11/12 justify-center items-center shadow-md shadow-gray-600 bg-gray-100 md:w-9/12 p-3 mx-auto rounded-lg my-8">
+        <h1 className="text-2xl mb-4">Mes favoris</h1>
         <ul className="flex flex-wrap gap-4 justify-center">
           {myFavAds.map((ad) => (
             <Link

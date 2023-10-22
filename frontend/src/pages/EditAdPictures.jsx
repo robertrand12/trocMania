@@ -70,6 +70,9 @@ export default function EditAdPictures() {
   };
 
   useEffect(() => {
+    if (!userId) {
+      navigate("/login");
+    }
     fetch(`${import.meta.env.VITE_BACKEND_URL}/api/pictures/${id}`, {
       credentials: "include",
     })
@@ -132,6 +135,7 @@ export default function EditAdPictures() {
     <div>
       <HeaderMobile />
       <section className=" justify-center items-center shadow-md shadow-gray-600 bg-gray-100 w-6/12 p-5 mx-auto rounded-lg my-8">
+        <h1 className="text-2xl mb-4">Gérer les photos de mon annonce</h1>
         <div className="flex flex-wrap gap-4">
           {pictures.map((picture) => (
             <figure className="w-3/12" key={picture.id}>

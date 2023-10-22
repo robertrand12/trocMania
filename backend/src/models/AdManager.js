@@ -7,7 +7,7 @@ class adManager extends AbstractManager {
 
   insert(ad) {
     return this.database.query(
-      `insert into ${this.table} (title, price, description, date, state, category, user_id) values (?,?,?,NOW(),?,?,?)`,
+      `insert into ${this.table} (title, price, description, state, category, user_id) values (?,?,?,?,?,?)`,
       [ad.title, ad.price, ad.description, ad.state, ad.category, ad.user_id]
     );
   }
@@ -28,14 +28,14 @@ class adManager extends AbstractManager {
 
   findAllMyAds(id) {
     return this.database.query(
-      `select ad.id, ad.title, ad.price, ad.description, ad.date, ad.state, ad.category, ad.user_id, ad.verified, p.source from ad left join picture as p on p.ad_id=ad.id where user_id = ? order by ad.id`,
+      `select ad.id, ad.title, ad.price, ad.description, ad.state, ad.category, ad.user_id, ad.verified, p.source from ad left join picture as p on p.ad_id=ad.id where user_id = ? order by ad.id`,
       [id]
     );
   }
 
   findAllByCategory(category) {
     return this.database.query(
-      `select ad.id, ad.title, ad.price, ad.description, ad.date, ad.state, ad.category, ad.user_id, p.source from ad left join picture as p on p.ad_id=ad.id where ad.category = ? and ad.verified = true order by ad.id`,
+      `select ad.id, ad.title, ad.price, ad.description, ad.state, ad.category, ad.user_id, p.source from ad left join picture as p on p.ad_id=ad.id where ad.category = ? and ad.verified = true order by ad.id`,
       [category]
     );
   }

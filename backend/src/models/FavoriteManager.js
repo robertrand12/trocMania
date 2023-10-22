@@ -21,7 +21,7 @@ class favoriteManager extends AbstractManager {
 
   findAllFavorites(id) {
     return this.database.query(
-      `select f.id, f.ad_id, f.user_id, ad.id, ad.title, ad.price, ad.description, ad.date, ad.state, ad.category, p.source from favorite as f join ad on ad.id=f.ad_id left join picture as p on p.ad_id=ad.id where f.user_id=? order by ad.id`,
+      `select f.id, f.ad_id, f.user_id, ad.id, ad.title, ad.price, ad.description, ad.state, ad.category, p.source from favorite as f join ad on ad.id=f.ad_id left join picture as p on p.ad_id=ad.id where f.user_id=? order by ad.id`,
       [id]
     );
   }

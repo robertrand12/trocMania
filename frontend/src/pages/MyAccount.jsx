@@ -93,6 +93,7 @@ export default function MyAccount() {
     <div>
       <HeaderMobile />
       <section className="w-11/12 justify-center items-center shadow-md shadow-gray-600 bg-gray-100 md:w-9/12 p-3 mx-auto rounded-lg my-8">
+        <h1 className="text-2xl mb-4">Mon compte</h1>
         <figure className="flex flex-col">
           <h1 className="text-center mb-5 text-2xl">
             {userInfo.firstname} {userInfo.lastname}

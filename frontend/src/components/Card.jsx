@@ -25,7 +25,6 @@ export default function Card({ infos }) {
 Card.propTypes = {
   infos: PropTypes.shape({
     category: PropTypes.string.isRequired,
-    date: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     id: PropTypes.number.isRequired,
     pictures: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.string))

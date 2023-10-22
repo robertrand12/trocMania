@@ -1,6 +1,7 @@
 /* eslint-disable consistent-return */
 import { useEffect, useState } from "react";
 import { Modal } from "react-responsive-modal";
+import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
 import { useUserContext } from "../contexts/UserContext";
 import HeaderMobile from "../components/HeaderMobile";
@@ -17,14 +18,32 @@ export default function CreateAd() {
   const [state, setState] = useState();
   const [category, setCategory] = useState();
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const [errors, setErrors] = useState([]);
   const [openCreate, setOpenCreate] = useState(false);
   const [openError, setOpenError] = useState(false);
+  const [openErrorForm, setOpenErrorForm] = useState(false);
+
+  const onOpenModalErrorForm = () => setOpenErrorForm(true);
+  const onCloseModalErrorForm = () => setOpenErrorForm(false);
 
   const onOpenModalError = () => setOpenError(true);
   const onCloseModalError = () => setOpenError(false);
 
   const onOpenModalCreate = () => setOpenCreate(true);
   const onCloseModalCreate = () => setOpenCreate(false);
+
+  const userSchema = Yup.object().shape({
+    title: Yup.string()
+      .required("Vous devez renseigner un titre pour votre annonce")
+      .min(3, "votre titre doit contenir au moins 3 caractères")
+      .max(255, "votre titre ne peut dépasser les 255 caractères"),
+    price: Yup.number().required("Vous devez renseigner un nom"),
+    description: Yup.string()
+      .min(15, "votre description doit contenir au moins 15 caractères")
+      .required("Vous devez renseigner un surnom"),
+    category: Yup.string().required("Vous devez renseigner une categorie"),
+    state: Yup.string().required("Vous devez renseigner un état"),
+  });
 
   const handleChangeSource = (e) => {
     const files = e.target.files[0];
@@ -35,44 +54,58 @@ export default function CreateAd() {
     if (!userId) {
       navigate("/login");
     }
+    setErrors([]);
     e.preventDefault();
-    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/ads`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        title,
-        price,
-        description,
-        state,
-        category,
-        user_id: userId,
-        email: userData.email,
-        firstname: userData.firstname,
-      }),
-    })
-      .then((res) => res.json())
-      .then((responseData) => {
-        if (selectedFiles.length === 0) {
-          return setOpenCreate(true);
-        }
-        const contentData = new FormData();
-        contentData.append("source", selectedFiles);
-        contentData.append("ad_id", responseData);
-        fetch(`${import.meta.env.VITE_BACKEND_URL}/api/pictures`, {
+
+    const data = {
+      title,
+      price,
+      description,
+      state,
+      category,
+      user_id: userId,
+      email: userData.email,
+      firstname: userData.firstname,
+    };
+
+    userSchema
+      .validate(data, { abortEarly: false })
+      .then(() => {
+        fetch(`${import.meta.env.VITE_BACKEND_URL}/api/ads`, {
           method: "POST",
           credentials: "include",
-          body: contentData,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
         })
-          .then(onOpenModalCreate())
-          .catch((err) => {
-            console.error(err);
-            onOpenModalError();
-          });
+          .then((res) => res.json())
+          .then((responseData) => {
+            if (selectedFiles.length === 0) {
+              return setOpenCreate(true);
+            }
+            const contentData = new FormData();
+            contentData.append("source", selectedFiles);
+            contentData.append("ad_id", responseData);
+            fetch(`${import.meta.env.VITE_BACKEND_URL}/api/pictures`, {
+              method: "POST",
+              credentials: "include",
+              body: contentData,
+            })
+              .then(onOpenModalCreate())
+              .catch((err) => {
+                console.error(err);
+                onOpenModalError();
+              });
+          })
+          .catch((err) => console.error(err));
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        err.inner.forEach((event) => {
+          setErrors((current) => [...current, event.message]);
+        });
+        onOpenModalErrorForm();
+      });
   };
 
   useEffect(() => {
@@ -95,6 +128,7 @@ export default function CreateAd() {
     <div>
       <HeaderMobile />
       <section className="w-11/12 justify-center items-center shadow-md shadow-gray-600 bg-gray-100 md:w-6/12 p-5 mx-auto rounded-lg my-8">
+        <h1 className="text-2xl mb-4">Créer une annonce</h1>
         <form onSubmit={handleSubmit} className="mt-5 md:px-4">
           <div className="md:flex justify-evenly w-full gap-4">
             <div className="form-group flex flex-col items-start w-full">
@@ -278,6 +312,33 @@ export default function CreateAd() {
           >
             Une erreur s'est produite lors de l'enregistrement du contenu.{" "}
           </p>
+        </div>
+      </Modal>
+      <Modal
+        open={openErrorForm}
+        onClose={onCloseModalErrorForm}
+        center
+        classNames={{ overlay: "customOverlay", modal: "customModal" }}
+        closeIcon={
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="24"
+            viewBox="0 -960 960 960"
+            width="24"
+            className="fill-white"
+          >
+            <path d="m336-280 144-144 144 144 56-56-144-144 144-144-56-56-144 144-144-144-56 56 144 144-144 144 56 56ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+          </svg>
+        }
+      >
+        <h1 className="text-white text-center">Erreur !</h1>
+
+        <div className="flex justify-center mt-2 gap-6 ">
+          <ul className="text-white">
+            {errors.map((err) => (
+              <li key={err}>{err}</li>
+            ))}
+          </ul>
         </div>
       </Modal>
     </div>

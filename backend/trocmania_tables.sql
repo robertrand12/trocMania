@@ -27,7 +27,6 @@ CREATE TABLE `ad` (
   `title` varchar(255) NOT NULL,
   `price` int NOT NULL,
   `description` text NOT NULL,
-  `date` datetime NOT NULL,
   `state` enum('neuf','très bon état','bon état','état moyen','mauvais état','pour pièces') NOT NULL,
   `category` enum('ameublement','éléctroménager','décoration','multimédia','véhicule','immobilier','jeux','autre') NOT NULL,
   `user_id` int NOT NULL,

@@ -11,7 +11,7 @@ class AbstractManager {
 
   findAds(id) {
     return this.database.query(
-      `select ad.id, ad.title, ad.price, ad.description, ad.date, ad.state, ad.category, ad.user_id, ad.verified, p.source from ad left join picture as p on p.ad_id=ad.id where ad.id = ? order by ad.id`,
+      `select ad.id, ad.title, ad.price, ad.description, ad.state, ad.category, ad.user_id, ad.verified, p.source from ad left join picture as p on p.ad_id=ad.id where ad.id = ? order by ad.id`,
       [id]
     );
   }
@@ -22,13 +22,13 @@ class AbstractManager {
 
   findAllAds() {
     return this.database.query(
-      `select ad.id, ad.title, ad.price, ad.description, ad.date, ad.state, ad.category, ad.user_id, ad.verified, p.source from ad left join picture as p on p.ad_id=ad.id where ad.verified = true order by ad.id`
+      `select ad.id, ad.title, ad.price, ad.description, ad.state, ad.category, ad.user_id, ad.verified, p.source from ad left join picture as p on p.ad_id=ad.id where ad.verified = true order by ad.id`
     );
   }
 
   findAllAdsNotVerified() {
     return this.database.query(
-      `select ad.id, ad.title, ad.price, ad.description, ad.date, ad.state, ad.category, ad.user_id, ad.verified, p.source from ad left join picture as p on p.ad_id=ad.id where ad.verified = false order by ad.id`
+      `select ad.id, ad.title, ad.price, ad.description, ad.state, ad.category, ad.user_id, ad.verified, p.source from ad left join picture as p on p.ad_id=ad.id where ad.verified = false order by ad.id`
     );
   }
 
