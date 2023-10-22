@@ -34,6 +34,11 @@ app.use("/api", router);
 
 // serve the `backend/public` folder for public resources
 
+app.get("/logout", (req, res) => {
+  res.clearCookie("jwtToken");
+  res.send("Cookie cleared");
+});
+
 app.use(express.static(path.join(__dirname, "../public")));
 
 // serve REACT APP

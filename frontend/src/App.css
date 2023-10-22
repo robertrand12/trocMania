@@ -87,3 +87,21 @@ code {
   transform: rotate(225deg);
   transition-delay: 0s, calc(0s + 0.35s);
 }
+
+.customOverlay {
+  background: rgb(181, 183, 188, 0.8);
+}
+
+.customModal {
+  background: rgb(83, 85, 93);
+  width: 420px;
+  border-radius: 10px;
+}
+
+@media (max-width: 768px) {
+  .customModal {
+    width: 280px;
+
+  }
+}
+

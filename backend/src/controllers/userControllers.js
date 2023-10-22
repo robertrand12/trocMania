@@ -23,7 +23,9 @@ const read = (req, res) => {
       if (rows[0] == null) {
         res.sendStatus(404);
       } else {
-        res.send(rows[0]);
+        const user = rows[0];
+        delete user.hashedPassword;
+        res.send(user);
       }
     })
     .catch((err) => {
@@ -134,10 +136,6 @@ const login = (req, res, next) => {
     });
 };
 
-const logout = (req, res) => {
-  res.clearCookie("jwtToken").end();
-};
-
 module.exports = {
   browse,
   read,
@@ -145,5 +143,4 @@ module.exports = {
   add,
   destroy,
   login,
-  logout,
 };

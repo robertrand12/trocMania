@@ -31,6 +31,7 @@ CREATE TABLE `ad` (
   `state` enum('neuf','très bon état','bon état','état moyen','mauvais état','pour pièces') NOT NULL,
   `category` enum('ameublement','éléctroménager','décoration','multimédia','véhicule','immobilier','jeux','autre') NOT NULL,
   `user_id` int NOT NULL,
+  `verified` tinyint(1) DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `fk_ad_user` (`user_id`),
   CONSTRAINT `fk_ad_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE
@@ -53,29 +54,6 @@ CREATE TABLE `favorite` (
   KEY `fk_favorite_ad` (`ad_id`),
   CONSTRAINT `fk_favorite_ad` FOREIGN KEY (`ad_id`) REFERENCES `ad` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_favorite_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `message`
---
-
-DROP TABLE IF EXISTS `message`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `message` (
-  `id` int NOT NULL AUTO_INCREMENT,
-  `ad_id` int NOT NULL,
-  `user_id_from` int NOT NULL,
-  `user_id_to` int NOT NULL,
-  `message` text NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fk_message_user_from` (`user_id_from`),
-  KEY `fk_message_user_to` (`user_id_to`),
-  KEY `fk_message_ad` (`ad_id`),
-  CONSTRAINT `fk_message_ad` FOREIGN KEY (`ad_id`) REFERENCES `ad` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `fk_message_user_from` FOREIGN KEY (`user_id_from`) REFERENCES `user` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `fk_message_user_to` FOREIGN KEY (`user_id_to`) REFERENCES `user` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -116,8 +94,8 @@ CREATE TABLE `user` (
   `latitude` decimal(8,6) DEFAULT NULL,
   `longitude` decimal(9,6) DEFAULT NULL,
   `email` varchar(100) NOT NULL,
-  `verified_email` tinyint(1) DEFAULT '0',
   `hashedPassword` varchar(255) NOT NULL,
+  `role` enum('user','admin') NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

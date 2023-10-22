@@ -1,14 +1,19 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Modal } from "react-responsive-modal";
 import { useUserContext } from "../contexts/UserContext";
 import HeaderMobile from "../components/HeaderMobile";
 
-function Connexion() {
-  const { setUserId } = useUserContext();
+export default function Connexion() {
+  const { setUserId, setRole } = useUserContext();
   const [passwordIsVisible, setPasswordIsVisible] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const [openError, setOpenError] = useState(false);
+
+  const onOpenModalError = () => setOpenError(true);
+  const onCloseModalError = () => setOpenError(false);
 
   const handleChangeEmail = (e) => {
     setEmail(e.target.value);
@@ -21,33 +26,30 @@ function Connexion() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    if (!email || !password) {
-      alert("Vous devez renseigner un email et un mot de passe!");
-    } else {
-      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/users/login`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/users/login`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+    })
+      .then((res) => {
+        return res.json();
       })
-        .then((res) => {
-          return res.json();
-        })
-        .then((data) => {
-          navigate("/");
-          setUserId(data.id);
-        })
-        .catch((err) => {
-          console.error(err);
-          alert("Erreur de connexion, veuillez réessayer");
-        });
-    }
-    // Réinitialiser les valeurs du formulaire
+      .then((data) => {
+        navigate("/");
+        setUserId(data.id);
+        setRole(data.role);
+      })
+      .catch((err) => {
+        console.error(err);
+        onOpenModalError();
+      });
+
     setEmail("");
     setPassword("");
   };
@@ -55,7 +57,7 @@ function Connexion() {
   return (
     <div>
       <HeaderMobile />
-      <div className="flex flex-col justify-center items-center shadow-md shadow-gray-600 bg-gray-100 w-6/12 pb-10 mx-auto rounded-lg mt-14">
+      <div className="w-11/12 flex flex-col justify-center items-center shadow-md shadow-gray-600 bg-gray-100 md:w-6/12 pb-10 mx-auto rounded-lg mt-14">
         <div className=" mb-16 mt-16">
           <h2 className=" font-bold text-black text-2xl h-16 flex justify-center">
             Bonjour
@@ -73,7 +75,7 @@ function Connexion() {
             Adresse Email
           </label>
           <input
-            className="bg-blue-100 rounded-md text-black w-60 h-12 p-2 md:w-96"
+            className="bg-blue-100 rounded-md text-black w-60 h-10 p-2 md:w-96"
             type="text"
             name="mail"
             required
@@ -88,7 +90,7 @@ function Connexion() {
           </label>
           <div className="flex">
             <input
-              className=" bg-blue-100 rounded-md text-black w-60 h-12 p-2 md:w-96"
+              className=" bg-blue-100 rounded-md text-black w-60 h-10 p-2 md:w-96"
               type={passwordIsVisible ? "text" : "password"}
               name="password"
               required
@@ -130,21 +132,47 @@ function Connexion() {
           >
             Se connecter
           </button>
-          <div className="mx-auto mt-2">
-            <p className=" text-sm">
-              Envie de nous rejoindre ?{" "}
-              <a
-                href="/creer-compte"
-                className="text-blue-400 hover:text-blue-500"
-              >
-                Créer un compte
-              </a>
-            </p>
-          </div>
         </form>
+        <div className="mx-auto mt-2">
+          <p className=" text-sm">
+            Envie de nous rejoindre ?{" "}
+            <a
+              href="/create-account"
+              className="text-blue-400 hover:text-blue-500"
+            >
+              Créer un compte
+            </a>
+          </p>
+        </div>
       </div>
+      <Modal
+        open={openError}
+        onClose={onCloseModalError}
+        center
+        classNames={{ overlay: "customOverlay", modal: "customModal" }}
+        closeIcon={
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="24"
+            viewBox="0 -960 960 960"
+            width="24"
+            className="fill-white"
+          >
+            <path d="m336-280 144-144 144 144 56-56-144-144 144-144-56-56-144 144-144-144-56 56 144 144-144 144 56 56ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+          </svg>
+        }
+      >
+        <h1 className="text-white text-center">Erreur !</h1>
+
+        <div className="flex justify-center mt-2 gap-6 ">
+          <p
+            className="text-white
+            "
+          >
+            Erreur de connexion, veuillez réessayer
+          </p>
+        </div>
+      </Modal>
     </div>
   );
 }
-
-export default Connexion;

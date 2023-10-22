@@ -1,4 +1,4 @@
-/* eslint-disable react/prop-types */
+import PropTypes from "prop-types";
 import defaultImage from "../assets/defaultImage.jpg";
 
 export default function Card({ infos }) {
@@ -21,3 +21,19 @@ export default function Card({ infos }) {
     </figure>
   );
 }
+
+Card.propTypes = {
+  infos: PropTypes.shape({
+    category: PropTypes.string.isRequired,
+    date: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
+    pictures: PropTypes.arrayOf(PropTypes.objectOf(PropTypes.string))
+      .isRequired,
+    price: PropTypes.number.isRequired,
+    state: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    user_id: PropTypes.number.isRequired,
+    verified: PropTypes.number.isRequired,
+  }).isRequired,
+};

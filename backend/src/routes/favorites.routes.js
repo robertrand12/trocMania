@@ -2,9 +2,7 @@ const router = require("express").Router();
 
 const favoriteControllers = require("../controllers/favoriteControllers");
 
-router.get("/users/:id", favoriteControllers.browse);
-router.get("/users/:id", favoriteControllers.browse);
-router.get("/:adId/:userId", favoriteControllers.exist);
+router.get("/:adId/users/:userId", favoriteControllers.exist);
 router.get("/:id", favoriteControllers.read);
 
 router.post("/", favoriteControllers.add);

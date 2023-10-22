@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { Modal } from "react-responsive-modal";
 import { useUserContext } from "../contexts/UserContext";
 import HeaderMobile from "../components/HeaderMobile";
 
 export default function EditUser() {
-  const navigate = useNavigate();
   const { userId } = useUserContext();
-  const [userInfo, setUserInfo] = useState();
+  // const [userInfo, setUserInfo] = useState();
 
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
@@ -16,6 +16,14 @@ export default function EditUser() {
   const [zipCode, setZipCode] = useState();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [openUpdate, setOpenUpdate] = useState(false);
+  const [openError, setOpenError] = useState(false);
+
+  const onOpenModalError = () => setOpenError(true);
+  const onCloseModalError = () => setOpenError(false);
+
+  const onOpenModalUpdate = () => setOpenUpdate(true);
+  const onCloseModalUpdate = () => setOpenUpdate(false);
 
   const handleChangeFirstname = (e) => {
     setFirstname(e.target.value);
@@ -60,7 +68,7 @@ export default function EditUser() {
       zip_code: zipCode,
       city,
       email,
-      hashedPassword: userInfo.hashedPassword,
+      password,
     };
 
     fetch(`${import.meta.env.VITE_BACKEND_URL}/api/users/${userId}`, {
@@ -71,15 +79,11 @@ export default function EditUser() {
       body: JSON.stringify(data),
     })
       .then(() => {
-        alert("Votre compte a bien été modifié");
-        navigate(`/mon-compte/${userId}`);
+        onOpenModalUpdate();
       })
       .catch((err) => {
         console.error(err);
-        // eslint-disable-next-line no-alert
-        alert(
-          "Erreur dans la modification du compte, veuillez Essayer à nouveau"
-        );
+        onOpenModalError();
       });
   };
 
@@ -100,14 +104,10 @@ export default function EditUser() {
           setZipCode(data.zip_code);
           setEmail(data.email);
           setPassword(data.password);
-          setUserInfo(data);
         })
         .catch((err) => {
           console.error(err);
-          // eslint-disable-next-line no-alert
-          alert(
-            "Erreur dans la création du compte, veuillez Essayer à nouveau"
-          );
+          onOpenModalError();
         });
     }
   }, [userId]);
@@ -115,7 +115,7 @@ export default function EditUser() {
   return (
     <div>
       <HeaderMobile />
-      <section className=" justify-center items-center shadow-md shadow-gray-600 bg-gray-100 w-9/12 p-3 mx-auto rounded-lg my-8">
+      <section className="w-11/12 justify-center items-center shadow-md shadow-gray-600 bg-gray-100 md:w-9/12 p-3 mx-auto rounded-lg my-8">
         <form onSubmit={handleSubmit} className="mt-2 px-4">
           <div className="flex flex-col ">
             <div className="grid lg:grid-cols-2 gap-4 overflow-y-auto pb-5 ">
@@ -156,8 +156,8 @@ export default function EditUser() {
                 />
               </div>
 
-              <div className="flex gap-4">
-                <div className="flex flex-col items-start">
+              <div className="md:flex gap-4">
+                <div className="flex grow flex-col items-start">
                   <label htmlFor="address" className=" text-base mb-2 ">
                     Adresse
                   </label>
@@ -235,6 +235,64 @@ export default function EditUser() {
           </div>
         </form>
       </section>
+      <Modal
+        open={openUpdate}
+        onClose={onCloseModalUpdate}
+        center
+        classNames={{ overlay: "customOverlay", modal: "customModal" }}
+        closeIcon={
+          <Link to={`/my-account/${userId}`}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="24"
+              viewBox="0 -960 960 960"
+              width="24"
+              className="fill-white"
+            >
+              <path d="m336-280 144-144 144 144 56-56-144-144 144-144-56-56-144 144-144-144-56 56 144 144-144 144 56 56ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+            </svg>
+          </Link>
+        }
+      >
+        <h1 className="text-white text-center">Compte modifié !</h1>
+
+        <div className="flex justify-center mt-2 gap-6 ">
+          <p
+            className="text-white
+            "
+          >
+            Votre compte a bien été modifié.
+          </p>
+        </div>
+      </Modal>
+      <Modal
+        open={openError}
+        onClose={onCloseModalError}
+        center
+        classNames={{ overlay: "customOverlay", modal: "customModal" }}
+        closeIcon={
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="24"
+            viewBox="0 -960 960 960"
+            width="24"
+            className="fill-white"
+          >
+            <path d="m336-280 144-144 144 144 56-56-144-144 144-144-56-56-144 144-144-144-56 56 144 144-144 144 56 56ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+          </svg>
+        }
+      >
+        <h1 className="text-white text-center">Erreur !</h1>
+
+        <div className="flex justify-center mt-2 gap-6 ">
+          <p
+            className="text-white
+            "
+          >
+            Une erreur s'est produite lors de la modification du compte.
+          </p>
+        </div>
+      </Modal>
     </div>
   );
 }

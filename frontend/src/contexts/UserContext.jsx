@@ -1,7 +1,6 @@
+/* eslint-disable react/prop-types */
 import { createContext, useContext, useState, useMemo, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-
-import PropTypes from "prop-types";
 
 const UserContext = createContext();
 
@@ -11,36 +10,31 @@ const UserContextProvider = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const [userId, setUserId] = useState("");
+  const [role, setRole] = useState("");
 
   const userMemo = useMemo(() => ({
     userId,
     setUserId,
+    role,
+    setRole,
   }));
 
   useEffect(() => {
-    if (
-      location.pathname !== "/" ||
-      location.pathname !== "/login" ||
-      location.pathname !== "/creer-compte"
-    ) {
-      fetch(`${import.meta.env.VITE_BACKEND_URL}/api/refresh-token`, {
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/refresh-token`, {
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => {
+        return res.json();
       })
-        .then((res) => {
-          return res.json();
-        })
-        .then((data) => {
-          navigate(location.pathname);
-          setUserId(data.id);
-        })
-        .catch((err) => {
-          console.error(err);
-          alert("Error to login please try again !");
-        });
-    }
+      .then((data) => {
+        navigate(location.pathname);
+        setRole(data.role);
+        setUserId(data.id);
+      })
+      .catch((err) => console.error(err));
   }, []);
 
   return (
@@ -49,9 +43,5 @@ const UserContextProvider = ({ children }) => {
 };
 
 const useUserContext = () => useContext(UserContext);
-
-UserContextProvider.propTypes = {
-  children: PropTypes.elementType.isRequired,
-};
 
 export { UserContextProvider, useUserContext };

@@ -15,8 +15,13 @@ export default function Header() {
       })
       .then((data) => {
         setUserInfo(data);
-      });
+      })
+      .catch((err) => console.error(err));
   }, [userId]);
+
+  if (!userInfo) {
+    return <p>chargement de la page</p>;
+  }
 
   return (
     <section className="hidden md:block mb-8">
@@ -27,28 +32,55 @@ export default function Header() {
           </Link>
         </li>
         <li>
-          <Link to="/deposer-une-annonce">
-            <button
-              type="button"
-              className="flex items-center bg-orange-600 hover:bg-orange-500 duration-300 px-4 rounded-xl py-2 hover:scale-105"
-            >
-              <svg
-                className="fill-white"
-                xmlns="http://www.w3.org/2000/svg"
-                height="36"
-                viewBox="0 -960 960 960"
-                width="24"
-              >
-                <path d="M450-280h60v-170h170v-60H510v-170h-60v170H280v60h170v170ZM180-120q-24 0-42-18t-18-42v-600q0-24 18-42t42-18h600q24 0 42 18t18 42v600q0 24-18 42t-42 18H180Zm0-60h600v-600H180v600Zm0-600v600-600Z" />
-              </svg>
-              <h3 className="text-white pl-2">Déposer une annonce</h3>
-            </button>
-          </Link>
+          <ul className="flex gap-10">
+            <li>
+              <Link to="/ads/create">
+                <button
+                  type="button"
+                  className="flex items-center bg-orange-600 hover:bg-orange-500 duration-300 px-4 rounded-xl py-2 hover:scale-105"
+                >
+                  <svg
+                    className="fill-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    height="36"
+                    viewBox="0 -960 960 960"
+                    width="24"
+                  >
+                    <path d="M450-280h60v-170h170v-60H510v-170h-60v170H280v60h170v170ZM180-120q-24 0-42-18t-18-42v-600q0-24 18-42t42-18h600q24 0 42 18t18 42v600q0 24-18 42t-42 18H180Zm0-60h600v-600H180v600Zm0-600v600-600Z" />
+                  </svg>
+                  <h3 className="text-white pl-2">Déposer une annonce</h3>
+                </button>
+              </Link>
+            </li>
+            <li>
+              {userInfo.role === "admin" ? (
+                <Link to="/validate-ads">
+                  <button
+                    type="button"
+                    className="flex items-center bg-blue-600 hover:bg-blue-500 duration-300 px-4 rounded-xl py-2 hover:scale-105"
+                  >
+                    <svg
+                      className="fill-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      height="36"
+                      viewBox="0 -960 960 960"
+                      width="24"
+                    >
+                      <path d="M450-280h60v-170h170v-60H510v-170h-60v170H280v60h170v170ZM180-120q-24 0-42-18t-18-42v-600q0-24 18-42t42-18h600q24 0 42 18t18 42v600q0 24-18 42t-42 18H180Zm0-60h600v-600H180v600Zm0-600v600-600Z" />
+                    </svg>
+                    <h3 className="text-white pl-2">
+                      Voir les annonces en attente de validation
+                    </h3>
+                  </button>
+                </Link>
+              ) : null}
+            </li>
+          </ul>
         </li>
         <li>
           <ul className="flex justify-between">
             <li className="mx-2">
-              <Link to="/mes-annonces">
+              <Link to="/my-ads">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   height="36"
@@ -62,7 +94,7 @@ export default function Header() {
               </Link>
             </li>
             <li className="mx-2">
-              <Link to="/mes-favoris">
+              <Link to="/my-favorite-ads">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   height="36"
@@ -93,7 +125,7 @@ export default function Header() {
               </li>
             ) : (
               <li className="mx-2">
-                <Link to={`/mon-compte/${userId}`}>
+                <Link to={`/my-account/${userId}`}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     height="36"

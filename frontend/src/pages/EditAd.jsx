@@ -1,27 +1,32 @@
 /* eslint-disable consistent-return */
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { Modal } from "react-responsive-modal";
 import { useUserContext } from "../contexts/UserContext";
 import HeaderMobile from "../components/HeaderMobile";
 
 export default function CreateAd() {
   const { id } = useParams();
-  const navigate = useNavigate();
   const { userId } = useUserContext();
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState();
   const [description, setDescription] = useState();
   const [state, setState] = useState();
   const [category, setCategory] = useState();
-
   const [adInfo, setAdInfo] = useState([]);
+  const [openError, setOpenError] = useState(false);
+  const [openUpdateAdOk, setUpdateAdOk] = useState(false);
+
+  const onOpenModalUpdateAdOk = () => setUpdateAdOk(true);
+  const onCloseModalUpdateAdOk = () => setUpdateAdOk(false);
+
+  const onCloseModalError = () => setOpenError(false);
 
   const handleSubmit = (e) => {
-    if (userId !== adInfo.user_id) {
-      alert("Vous n'êtes pas le propriétaire de l'annonce !!");
-      return navigate("/");
-    }
     e.preventDefault();
+    if (userId !== adInfo.user_id) {
+      return setOpenError(true);
+    }
     fetch(`${import.meta.env.VITE_BACKEND_URL}/api/ads/${id}`, {
       method: "PUT",
       credentials: "include",
@@ -37,10 +42,10 @@ export default function CreateAd() {
         user_id: userId,
       }),
     })
-      // .then((res) => res.json())
       .then(() => {
-        return navigate(`/${id}`);
-      });
+        return onOpenModalUpdateAdOk();
+      })
+      .catch((err) => console.error(err));
   };
 
   useEffect(() => {
@@ -64,9 +69,9 @@ export default function CreateAd() {
   return (
     <div>
       <HeaderMobile />
-      <section className=" justify-center items-center shadow-md shadow-gray-600 bg-gray-100 w-6/12 p-5 mx-auto rounded-lg my-8">
+      <section className="w-11/12 justify-center items-center shadow-md shadow-gray-600 bg-gray-100 md:w-6/12 p-5 mx-auto rounded-lg my-8">
         <form onSubmit={handleSubmit} className="mt-5 px-4">
-          <div className="flex justify-evenly w-full gap-4">
+          <div className="md:flex justify-evenly w-full gap-4">
             <div className="form-group flex flex-col items-start w-full">
               <label htmlFor="category" className="text-base mb-2 text-black">
                 Catégorie de l'article :
@@ -79,7 +84,6 @@ export default function CreateAd() {
                 className="px-4 py-1 text-black rounded-md w-full"
                 onChange={(e) => setCategory(e.target.value)}
               >
-                <option value="">Sélectionnez une catégorie</option>
                 <option value="ameublement">Ameublement</option>
                 <option value="éléctroménager">Eléctroménager</option>
                 <option value="décoration">Décoration</option>
@@ -101,7 +105,6 @@ export default function CreateAd() {
                 className="px-4 py-1 text-black rounded-md w-full"
                 onChange={(e) => setState(e.target.value)}
               >
-                <option value="">Sélectionnez un état</option>
                 <option value="neuf">Neuf</option>
                 <option value="très bon état">Très bon état</option>
                 <option value="bon état">Bon état</option>
@@ -175,6 +178,67 @@ export default function CreateAd() {
           </div>
         </form>
       </section>
+      <Modal
+        open={openError}
+        onClose={onCloseModalError}
+        center
+        classNames={{ overlay: "customOverlay", modal: "customModal" }}
+        closeIcon={
+          <Link to="/">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="24"
+              viewBox="0 -960 960 960"
+              width="24"
+              className="fill-white"
+            >
+              <path d="m336-280 144-144 144 144 56-56-144-144 144-144-56-56-144 144-144-144-56 56 144 144-144 144 56 56ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+            </svg>
+          </Link>
+        }
+      >
+        <h1 className="text-white text-center">Erreur !</h1>
+
+        <div className="flex justify-center mt-2 gap-6 ">
+          <p
+            className="text-white
+            "
+          >
+            Vous ne pouvez pas modifier cette annonce car vous n'en êtes pas le
+            propriétaire.
+          </p>
+        </div>
+      </Modal>
+      <Modal
+        open={openUpdateAdOk}
+        onClose={onCloseModalUpdateAdOk}
+        center
+        classNames={{ overlay: "customOverlay", modal: "customModal" }}
+        closeIcon={
+          <Link to={`/ads/${id}`}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="24"
+              viewBox="0 -960 960 960"
+              width="24"
+              className="fill-white"
+            >
+              <path d="m336-280 144-144 144 144 56-56-144-144 144-144-56-56-144 144-144-144-56 56 144 144-144 144 56 56ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+            </svg>
+          </Link>
+        }
+      >
+        <h1 className="text-white text-center">Modification de l'annonce !</h1>
+
+        <div className="flex justify-center mt-2 gap-6 ">
+          <p
+            className="text-white
+            "
+          >
+            Votre annonce a bien été modifiée
+          </p>
+        </div>
+      </Modal>
     </div>
   );
 }

@@ -18,10 +18,11 @@ export default function Home() {
         })
         .then((data) => {
           setAds(data);
-        });
+        })
+        .catch((err) => console.error(err));
     } else {
       fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/api/ads/bycategory/${category}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/ads/categories/${category}`,
         {
           credentials: "include",
         }
@@ -31,7 +32,8 @@ export default function Home() {
         })
         .then((data) => {
           setAds(data);
-        });
+        })
+        .catch((err) => console.error(err));
     }
   }, [category]);
   return (
@@ -49,7 +51,7 @@ export default function Home() {
           className="px-4 py-1 text-black rounded-md w-full border-2"
           onChange={(e) => setCategory(e.target.value)}
         >
-          <option value="">Sélectionnez une catégorie</option>
+          <option value="">Tout afficher</option>
           <option value="ameublement">Ameublement</option>
           <option value="éléctroménager">Eléctroménager</option>
           <option value="décoration">Décoration</option>
@@ -68,7 +70,7 @@ export default function Home() {
             value="tout afficher"
             onClick={() => setCategory("")}
           >
-            tout afficher
+            Tout afficher
           </button>
         </li>
         <li className="hover:scale-105 ">
@@ -78,7 +80,7 @@ export default function Home() {
             value="ameublement"
             onClick={(e) => setCategory(e.target.value)}
           >
-            ameublement
+            Ameublement
           </button>
         </li>
         <li className="hover:scale-105 ">
@@ -88,7 +90,7 @@ export default function Home() {
             value="éléctroménager"
             onClick={(e) => setCategory(e.target.value)}
           >
-            éléctroménager
+            Electroménager
           </button>
         </li>
         <li className="hover:scale-105 ">
@@ -98,7 +100,7 @@ export default function Home() {
             value="décoration"
             onClick={(e) => setCategory(e.target.value)}
           >
-            décoration
+            Décoration
           </button>
         </li>
         <li className="hover:scale-105 ">
@@ -108,7 +110,7 @@ export default function Home() {
             value="multimédia"
             onClick={(e) => setCategory(e.target.value)}
           >
-            multimédia
+            Multimédia
           </button>
         </li>
         <li className="hover:scale-105 ">
@@ -118,7 +120,7 @@ export default function Home() {
             value="véhicule"
             onClick={(e) => setCategory(e.target.value)}
           >
-            véhicule
+            Véhicule
           </button>
         </li>
         <li className="hover:scale-105 ">
@@ -128,7 +130,7 @@ export default function Home() {
             value="immobilier"
             onClick={(e) => setCategory(e.target.value)}
           >
-            immobilier
+            Immobilier
           </button>
         </li>
         <li className="hover:scale-105 ">
@@ -138,7 +140,7 @@ export default function Home() {
             value="jeux"
             onClick={(e) => setCategory(e.target.value)}
           >
-            jeux
+            Loisir
           </button>
         </li>
         <li className="hover:scale-105 ">
@@ -148,7 +150,7 @@ export default function Home() {
             value="autre"
             onClick={(e) => setCategory(e.target.value)}
           >
-            autre
+            Autres
           </button>
         </li>
       </ul>
@@ -158,7 +160,11 @@ export default function Home() {
         ) : (
           <ul className="flex flex-wrap gap-4 justify-center">
             {ads.map((ad) => (
-              <Link to={`/${ad.id}`} className=" w-48" key={`home - ${ad.id}`}>
+              <Link
+                to={`/ads/${ad.id}`}
+                className=" w-48"
+                key={`home - ${ad.id}`}
+              >
                 <li>
                   <Card infos={ad} />
                 </li>

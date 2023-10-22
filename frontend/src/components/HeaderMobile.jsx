@@ -53,7 +53,7 @@ export default function HeaderMobile() {
         </NavLink>
         <div className="border-t-[0.5px] w-6/12 border-white" />
         <NavLink
-          to="/deposer-une-annonce"
+          to="/ads/create"
           onTouchEnd={handleVisibleMenu}
           onClick={handleVisibleMenu}
           className={({ isActive }) =>
@@ -64,7 +64,7 @@ export default function HeaderMobile() {
         </NavLink>
         <div className="border-t-[0.5px] w-6/12 border-white" />
         <NavLink
-          to="/mes-annonces"
+          to="/my-ads"
           onTouchEnd={handleVisibleMenu}
           onClick={handleVisibleMenu}
           className={({ isActive }) =>
@@ -75,7 +75,18 @@ export default function HeaderMobile() {
         </NavLink>
         <div className="border-t-[0.5px] w-6/12 border-white" />
         <NavLink
-          to="/mes-favoris"
+          to="/validate-ads"
+          onTouchEnd={handleVisibleMenu}
+          onClick={handleVisibleMenu}
+          className={({ isActive }) =>
+            isActive ? "text-black" : "text-black/40"
+          }
+        >
+          <li>Annonces en attente de validation</li>
+        </NavLink>
+        <div className="border-t-[0.5px] w-6/12 border-white" />
+        <NavLink
+          to="/my-favorite-ads"
           onTouchEnd={handleVisibleMenu}
           onClick={handleVisibleMenu}
           className={({ isActive }) =>
@@ -87,7 +98,7 @@ export default function HeaderMobile() {
         <div className="border-t-[0.5px] w-6/12 border-white" />
         {userId ? (
           <NavLink
-            to={`/mon-compte/${userId}`}
+            to={`/my-account/${userId}`}
             onTouchEnd={handleVisibleMenu}
             onClick={handleVisibleMenu}
             className={({ isActive }) =>

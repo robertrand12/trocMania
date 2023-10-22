@@ -20,6 +20,7 @@ const browse = (req, res) => {
             state,
             category,
             user_id,
+            verified,
             source,
           } = rows[i];
           if (i !== 0 && ads[ads.length - 1].id === id) {
@@ -37,6 +38,62 @@ const browse = (req, res) => {
               state,
               category,
               user_id,
+              verified,
+              pictures: [
+                {
+                  source,
+                },
+              ],
+            });
+          }
+        }
+        res.send(ads);
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+};
+
+const browseNotVerified = (req, res) => {
+  models.ad
+    .findAllAdsNotVerified()
+    .then(([rows]) => {
+      if (rows.length === 0) {
+        res.json([]);
+      } else {
+        const ads = [];
+
+        for (let i = 0; i < rows.length; i += 1) {
+          const {
+            id,
+            title,
+            price,
+            description,
+            date,
+            state,
+            category,
+            user_id,
+            verified,
+            source,
+          } = rows[i];
+          if (i !== 0 && ads[ads.length - 1].id === id) {
+            ads[ads.length - 1].count += 1;
+            ads[ads.length - 1].pictures.push({
+              source,
+            });
+          } else {
+            ads.push({
+              id,
+              title,
+              price,
+              description,
+              date,
+              state,
+              category,
+              user_id,
+              verified,
               pictures: [
                 {
                   source,
@@ -74,6 +131,7 @@ const browseByCategory = (req, res) => {
             state,
             category,
             user_id,
+            verified,
             source,
           } = rows[i];
           if (i !== 0 && ads[ads.length - 1].id === id) {
@@ -91,6 +149,7 @@ const browseByCategory = (req, res) => {
               state,
               category,
               user_id,
+              verified,
               pictures: [
                 {
                   source,
@@ -128,6 +187,7 @@ const browseByUserId = (req, res) => {
             state,
             category,
             user_id,
+            verified,
             source,
           } = rows[i];
           if (i !== 0 && ads[ads.length - 1].id === id) {
@@ -145,6 +205,7 @@ const browseByUserId = (req, res) => {
               state,
               category,
               user_id,
+              verified,
               pictures: [
                 {
                   source,
@@ -182,6 +243,7 @@ const read = (req, res) => {
             state,
             category,
             user_id,
+            verified,
             source,
           } = rows[i];
           if (i !== 0 && ads[ads.length - 1].id === id) {
@@ -199,6 +261,7 @@ const read = (req, res) => {
               state,
               category,
               user_id,
+              verified,
               pictures: [
                 {
                   source,
@@ -237,13 +300,36 @@ const edit = (req, res) => {
     });
 };
 
-const add = (req, res) => {
-  const ad = req.body;
+const valid = (req, res, next) => {
+  const { body } = req;
 
+  models.ad
+    .verifyAd(req.params.id)
+    .then(([result]) => {
+      if (result.affectedRows === 0) {
+        res.sendStatus(404);
+      } else {
+        req.body = body;
+        next();
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+};
+
+const add = (req, res, next) => {
+  const ad = req.body;
   models.ad
     .insert(ad)
     .then(([result]) => {
-      res.status(201).json(result);
+      if (result.affectedRows === 0) {
+        res.sendStatus(404);
+      } else {
+        req.body.id = result.insertId;
+        next();
+      }
     })
     .catch((err) => {
       console.error(err);
@@ -267,6 +353,24 @@ const destroy = (req, res) => {
     });
 };
 
+const invalid = (req, res, next) => {
+  const { body } = req;
+  models.ad
+    .delete(req.params.id)
+    .then(([result]) => {
+      if (result.affectedRows === 0) {
+        res.sendStatus(404);
+      } else {
+        req.body = body;
+        next();
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+      res.sendStatus(500);
+    });
+};
+
 module.exports = {
   browse,
   read,
@@ -275,4 +379,7 @@ module.exports = {
   destroy,
   browseByUserId,
   browseByCategory,
+  browseNotVerified,
+  invalid,
+  valid,
 };
