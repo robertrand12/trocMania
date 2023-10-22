@@ -270,6 +270,7 @@ export default function MyAccount() {
           >
             Votre compte a bien été supprimé
           </p>
+          <p>A bientôt sur TrocMania</p>
         </div>
       </Modal>
       <Modal

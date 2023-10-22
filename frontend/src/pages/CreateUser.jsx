@@ -3,13 +3,10 @@ import { Link } from "react-router-dom";
 import { Modal } from "react-responsive-modal";
 import HeaderMobile from "../components/HeaderMobile";
 
-const imageTypes = ["image/jpeg", "image/jpg", "image/png"];
-
 export default function CreateUser() {
   const [firstname, setFirstname] = useState("");
   const [lastname, setLastname] = useState("");
   const [nickname, setNickname] = useState("");
-  const [image, setImage] = useState();
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
   const [zipCode, setZipCode] = useState();
@@ -34,10 +31,6 @@ export default function CreateUser() {
 
   const handleChangeNickname = (e) => {
     setNickname(e.target.value);
-  };
-
-  const handleChangeImage = (e) => {
-    setImage(e.target.value);
   };
 
   const handleChangeAddress = (e) => {
@@ -67,7 +60,6 @@ export default function CreateUser() {
       firstname,
       lastname,
       nickname,
-      image,
       address,
       zip_code: zipCode,
       city,
@@ -138,21 +130,9 @@ export default function CreateUser() {
                   required
                 />
               </div>
-              <div className="form-group flex flex-col items-start">
-                <label htmlFor="image" className="text-base mb-2 ">
-                  Ajouter une photo :
-                </label>
-                <input
-                  type="file"
-                  id="image"
-                  name="image"
-                  accept={imageTypes.join(",")}
-                  onChange={handleChangeImage}
-                  className="px-4 py-1 rounded-md w-full"
-                />
-              </div>
+
               <div className="flex gap-4">
-                <div className="flex flex-col items-start">
+                <div className="flex grow flex-col items-start">
                   <label htmlFor="address" className=" text-base mb-2 ">
                     Adresse *
                   </label>

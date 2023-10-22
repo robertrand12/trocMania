@@ -49,7 +49,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'Bertrand','Robert','bébert',NULL,'19, rue des écuyers',NULL,'chartres',28000,48.446278,1.490439,'brobert.bertrand@wanadoo.fr','$argon2id$v=19$m=65536,t=5,p=1$rf1a2E1OckIlw+gFNHSZGA$FeRcbBS69Yfo2Y/ZQyL70vDWinZ5WOCbkq83WbdmPMc','admin'),(2,'John','Doe','bogoss du 30',NULL,'10, rue de la pitié',NULL,'nimes',30900,43.834007,4.353947,'john.doe@example.fr','$argon2id$v=19$m=65536,t=5,p=1$l33UNICC/24+VFm8rkUlmQ$vSk0s2bWOM3vTAli0RXiIqNtm/tDKEUT92bDF6exuKc','user'),(3,'Xavier','Georget', 'Xgt72',NULL,'23, rue des glacières',NULL,'strasbourg',67000,48.577187,7.742667,'xavier.georget@example.fr','$argon2id$v=19$m=65536,t=5,p=1$T0srL6ry0wo8Bpc08gifUw$neIzeOfgLiTRZCcBGYNKj8ewJeHXAVz+W/tBQx9YHEU','user');
+INSERT INTO `user` VALUES (1,'Bertrand','Robert','bébert','19, rue des écuyers','chartres',28000,48.446278,1.490439,'brobert.bertrand@wanadoo.fr','$argon2id$v=19$m=65536,t=5,p=1$rf1a2E1OckIlw+gFNHSZGA$FeRcbBS69Yfo2Y/ZQyL70vDWinZ5WOCbkq83WbdmPMc','admin'),(2,'John','Doe','bogoss du 30','10, rue de la pitié','nimes',30900,43.834007,4.353947,'john.doe@example.fr','$argon2id$v=19$m=65536,t=5,p=1$l33UNICC/24+VFm8rkUlmQ$vSk0s2bWOM3vTAli0RXiIqNtm/tDKEUT92bDF6exuKc','user'),(3,'Xavier','Georget', 'Xgt72','23, rue des glacières','strasbourg',67000,48.577187,7.742667,'xavier.georget@example.fr','$argon2id$v=19$m=65536,t=5,p=1$T0srL6ry0wo8Bpc08gifUw$neIzeOfgLiTRZCcBGYNKj8ewJeHXAVz+W/tBQx9YHEU','user');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

@@ -18,7 +18,6 @@ router.post(
   passwordControllers.verifyPassword,
   authControllers.createToken
 );
-// router.get("/logout", userControllers.logout);
 router.delete("/:id", userControllers.destroy);
 
 module.exports = router;
